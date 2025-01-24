@@ -1,0 +1,26 @@
+.login-page {
+  background-color: #008f39;
+}
+
+.login-card-body,
+.login-box {
+  background: white;
+}
+
+.login-box,
+a {
+  color: white;
+}
+
+.social-auth-links,
+a {
+  color: black;
+}
+
+.link-pass {
+  color: white;
+}
+
+.link-reg {
+  color: white;
+}

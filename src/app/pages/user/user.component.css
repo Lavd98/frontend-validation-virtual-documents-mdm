@@ -1,0 +1,20 @@
+.modal {
+  display: none; /* Ocultar el modal por defecto */
+}
+
+.modal.in {
+  display: block; /* Mostrar el modal */
+  opacity: 1; /* Hacerlo visible */
+  transition: opacity 0.15s linear; /* Transición suave */
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro con opacidad */
+}
+
+.content-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

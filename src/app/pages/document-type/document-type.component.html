@@ -1,0 +1,280 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <button class="btn btn-success" (click)="openForm()">
+              <i class="fa fa-plus"></i> Registrar
+            </button>
+            <div
+              class="card-tools"
+              style="display: flex; gap: 16px; align-items: center"
+            >
+              <div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="activeCheckbox"
+                    [(ngModel)]="filterActive"
+                    (change)="onFilterActiveChange()"
+                  />
+                  <label class="form-check-label" for="activeCheckbox"
+                    >Activo</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="inactiveCheckbox"
+                    [(ngModel)]="filterInactive"
+                    (change)="onFilterInactiveChange()"
+                  />
+                  <label class="form-check-label" for="inactiveCheckbox"
+                    >Inactivo</label
+                  >
+                </div>
+              </div>
+              <div class="input-group" style="width: 250px">
+                <input
+                  type="text"
+                  name="table_search"
+                  class="form-control float-right"
+                  placeholder="Buscar"
+                  (keyup)="onSearch($event)"
+                />
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-default">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of getPaginatedAreas()">
+                  <td>{{ data.Name }}</td>
+                  <td>
+                    <span
+                      class="badge bg-{{
+                        data.IsActive ? 'success' : 'danger'
+                      }}"
+                      >{{ data.IsActive ? "Activo" : "Inactivo" }}</span
+                    >
+                  </td>
+                  <td style="display: flex; gap: 8px">
+                    <button
+                      class="btn btn-xs btn-info"
+                      (click)="openForm(data, true)"
+                      title="Ver detalle"
+                    >
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button
+                      *ngIf="data.IsActive"
+                      class="btn btn-xs btn-warning"
+                      (click)="openForm(data)"
+                      title="Editar"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button
+                      *ngIf="data.IsActive"
+                      class="btn btn-xs btn-danger"
+                      (click)="openConfirmModal('inactivate', data)"
+                      title="Eliminar"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                    <button
+                      *ngIf="!data.IsActive"
+                      class="btn btn-xs btn-success"
+                      (click)="openConfirmModal('activate', data)"
+                      title="Activar"
+                    >
+                      <i class="fa fa-undo"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot></tfoot>
+            </table>
+            <div
+              class="box-footer clearfix"
+              style="margin: 16px 60px"
+              *ngIf="filteredData.length > 0"
+            >
+              <ul class="pagination pagination-sm no-margin float-right">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <a
+                    class="page-link"
+                    href="javascript:void(0)"
+                    (click)="currentPage = 1"
+                    >&laquo;</a
+                  >
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <a
+                    class="page-link"
+                    href="javascript:void(0)"
+                    (click)="currentPage = currentPage - 1"
+                    >&lsaquo;</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  *ngFor="
+                    let page of [].constructor(getTotalPages());
+                    let i = index
+                  "
+                  [class.active]="currentPage === i + 1"
+                >
+                  <a
+                    class="page-link"
+                    href="javascript:void(0)"
+                    (click)="currentPage = i + 1"
+                    >{{ i + 1 }}</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  [class.disabled]="currentPage === getTotalPages()"
+                >
+                  <a
+                    class="page-link"
+                    href="javascript:void(0)"
+                    (click)="currentPage = currentPage + 1"
+                    >&rsaquo;</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  [class.disabled]="currentPage === getTotalPages()"
+                >
+                  <a
+                    class="page-link"
+                    href="javascript:void(0)"
+                    (click)="currentPage = getTotalPages()"
+                    >&raquo;</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div #formModal class="modal modal-backdrop fade" role="dialog">
+  <div class="modal-dialog content-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{ id ? "Editar un registro" : "Registrar un nuevo registro" }}
+        </h4>
+        <button type="button" class="close" (click)="closeModal()">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #dataForm="ngForm">
+          <div class="form-group">
+            <label for="username">Nombre del tipo de documento</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              [(ngModel)]="selectedData.Name"
+              name="username"
+              placeholder="Nombre del tipo de documento"
+              [readonly]="viewOnly"
+              required
+              title="Solo letras"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="closeModal()">
+          Cerrar
+        </button>
+        <button
+          [hidden]="viewOnly"
+          type="button"
+          class="btn btn-primary"
+          (click)="saveData()"
+          [disabled]="dataForm.invalid"
+        >
+          {{ id ? "Editar" : "Guardar" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #confirmModal class="modal modal-backdrop fade" role="dialog">
+  <div class="modal-dialog content-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{
+            confirmAction === "activate"
+              ? "Activar registro"
+              : "Inactivar registro"
+          }}
+        </h5>
+        <button type="button" class="close" (click)="closeConfirmModal()">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: center">
+        <i
+          class="fa"
+          [ngClass]="{
+            'fa-check-circle text-success': confirmAction === 'activate',
+            'fa-times-circle text-danger': confirmAction === 'inactivate'
+          }"
+          style="font-size: 48px; margin-bottom: 16px"
+        ></i>
+        <p>
+          ¿Está seguro que desea
+          {{ confirmAction === "activate" ? "activar" : "inactivar" }} este
+          registro?
+        </p>
+      </div>
+      <div class="modal-footer" style="justify-content: center; gap: 16px">
+        <button
+          type="button"
+          class="btn btn-default"
+          (click)="closeConfirmModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="
+            confirmAction === 'activate'
+              ? confirmActivateData()
+              : confirmInactivateData()
+          "
+        >
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

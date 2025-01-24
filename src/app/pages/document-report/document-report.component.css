@@ -1,0 +1,59 @@
+.header {
+  display: flex;
+  height: 60px;
+  width: 100%;
+  padding: 10px;
+  background-color: #008f39;
+  color: #fff;
+  border-bottom: 0 solid transparent;
+}
+
+.header_titulo {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  font-size: x-large;
+  font-weight: 900;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  padding: 48px 0px;
+}
+
+.search {
+  padding: 30px 70px;
+  display: flex;
+  flex: 2;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.document {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #f1ecec;
+  align-items: center;
+}
+
+.button-pdf {
+  display: flex;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.pdf-viewer-mobile {
+  width: 400px;
+  height: 500px;
+}
+
+.pdf-viewer {
+  width: 500px;
+  height: 500px;
+}

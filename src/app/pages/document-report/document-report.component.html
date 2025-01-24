@@ -1,0 +1,67 @@
+<div class="header">
+  <span class="header_titulo">
+    <div style="display: flex; align-items: center">
+      <div style="width: auto; height: auto">
+        <img src="static/img/mvcs_logo.e6c90d89.png" />
+      </div>
+      <span style="padding-left: 30px; font-size: 15px"> Municipalidad </span>
+    </div>
+    <span style="font-size: 15px">
+      VERIFICACIÓN DE DOCUMENTOS FIRMADOS DIGITALMENTE - SGD
+    </span>
+  </span>
+</div>
+<div class="content">
+  <div style="display: flex; margin: auto; flex: 1">
+    <div class="search">
+      <h3>VERIFICACIÓN DE DOCUMENTOS FIRMADOS DIGITALMENTE - SGD</h3>
+      <hr aria-orientation="horizontal" role="separator" />
+      <div>CÓDIGO DE VERIFICACIÓN</div>
+      <div style="text-align: center; width: 100%">
+        <input
+          type="text"
+          id="firstName"
+          name="firstName"
+          placeholder="Números de documento"
+          required=""
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$"
+          title="Solo letras y acentos"
+          oninput="this.value = this.value.replace(/\s/g, '')"
+          class="form-control ng-invalid ng-dirty ng-touched"
+          style="text-align: center"
+          required=""
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$"
+          name="firstName"
+          [(ngModel)]="documentNumber"
+        />
+      </div>
+      <div class="d-flex justify-center" (click)="searchDocument()">
+        <button [disabled]="documentNumber === ''" class="btn btn-success">
+          Buscar
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="document">
+    <img
+      src="assets/dist/svg/documento-pdf.svg"
+      alt="pdf"
+      *ngIf="!documentData"
+    />
+    <pdf-viewer
+      *ngIf="documentData"
+      [src]="documentData?.fileName || ''"
+      [render-text]="true"
+      [original-size]="false"
+      [class]="isWidthMobile ? 'pdf-viewer-mobile' : 'pdf-viewer'"
+    ></pdf-viewer>
+    <div *ngIf="documentData" class="button-pdf">
+      <a
+        download="COMPROBANTE.pdf"
+        class="btn btn-outline btn-success"
+        [href]="documentData?.fileName || ''"
+        >Descargar PDF</a
+      >
+    </div>
+  </div>
+</div>
