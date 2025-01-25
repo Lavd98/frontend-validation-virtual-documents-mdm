@@ -8,6 +8,7 @@ import { DocumentReportComponent } from './document-report/document-report.compo
 import { AreaComponent } from './area/area.component';
 import { DocumentTypeComponent } from './document-type/document-type.component';
 import { DocumentComponent } from './document/document.component';
+import { ServiceGuard } from '../guards/service.guard';
 
 const routes: Routes = [
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
       {
         path: 'documents',
         component: DocumentComponent,
+        canActivate: [ServiceGuard],
         data: { titulo: 'Lista de documentos' },
       },
       {

@@ -19,6 +19,7 @@ import { DocumentReportComponent } from './document-report/document-report.compo
 import { AreaComponent } from './area/area.component';
 import { DocumentTypeComponent } from './document-type/document-type.component';
 import { DocumentComponent } from './document/document.component';
+import { TokenExpiredDialogComponent } from './token-expired-dialog/token-expired-dialog.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { DocumentComponent } from './document/document.component';
     AreaComponent,
     DocumentTypeComponent,
     DocumentComponent,
+    TokenExpiredDialogComponent,
   ],
   imports: [
     CommonModule,

@@ -25,7 +25,7 @@ export class DocumentService {
     return new HttpHeaders().set('Authorization', `Bearer ${loginData.Token}`);
   }
 
-  getActive(areaId: string): Observable<DocumentListResponse> {
+  getActive(areaId: number): Observable<DocumentListResponse> {
     return this.http
       .get<DocumentListResponse>(`${this.URL}/api/documents/area/${areaId}`, {
         headers: this.getHeaders(),
@@ -33,7 +33,7 @@ export class DocumentService {
       .pipe(catchError(this.handleError));
   }
 
-  getInactive(areaId: string): Observable<DocumentListResponse> {
+  getInactive(areaId: number): Observable<DocumentListResponse> {
     return this.http
       .get<DocumentListResponse>(
         `${this.URL}/api/documents/area/${areaId}/inactive`,
@@ -44,7 +44,7 @@ export class DocumentService {
       .pipe(catchError(this.handleError));
   }
 
-  post(body: Document): Observable<DocumentListResponse> {
+  post(body: any): Observable<DocumentListResponse> {
     return this.http
       .post<DocumentListResponse>(`${this.URL}/api/documents`, body, {
         headers: this.getHeaders(),
@@ -52,7 +52,7 @@ export class DocumentService {
       .pipe(catchError(this.handleError));
   }
 
-  put(id: string, body: Document): Observable<DocumentListResponse> {
+  put(id: string, body: any): Observable<DocumentListResponse> {
     return this.http
       .put<DocumentListResponse>(`${this.URL}/api/documents/${id}`, body, {
         headers: this.getHeaders(),
@@ -100,7 +100,6 @@ export class DocumentService {
   getDocumentByNumber(
     number: string
   ): Observable<{ id: string; fileName: string } | undefined> {
-    debugger;
     const document = this.mockDocuments.find(
       (doc) => doc.documentNumber === number
     );

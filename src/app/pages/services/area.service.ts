@@ -40,7 +40,7 @@ export class AreaService {
 
   post(body: Area): Observable<AreaListResponse> {
     return this.http
-      .post<AreaListResponse>(`${this.URL}/api/areas`, body, {
+      .post<AreaListResponse>(`${this.URL}/api/areas2`, body, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -75,7 +75,7 @@ export class AreaService {
       console.error('An error occurred:', error.error.message);
     } else {
       console.error(
-        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+        `Backend returned code ${error.status}, ` + `body was: ${error.message}`
       );
     }
     return throwError(

@@ -98,6 +98,13 @@
                   </td>
                   <td style="display: flex; gap: 8px">
                     <button
+                      class="btn btn-xs btn-danger"
+                      title="Ver detalle"
+                      (click)="openPdf(data.FilePath)"
+                    >
+                      <i class="fa fa-file-pdf"></i>
+                    </button>
+                    <button
                       class="btn btn-xs btn-info"
                       (click)="openForm(data, true)"
                       title="Ver detalle"
@@ -215,18 +222,116 @@
       <div class="modal-body">
         <form #dataForm="ngForm">
           <div class="form-group">
-            <label for="username">Nombre del tipo de documento</label>
+            <label for="name">Nombre del documento</label>
             <input
               type="text"
               class="form-control"
-              id="username"
+              id="name"
               [(ngModel)]="selectedData.Name"
-              name="username"
+              name="name"
               placeholder="Nombre del tipo de documento"
               [readonly]="viewOnly"
               required
-              title="Solo letras"
+              title="Solo letras y acentos"
+              pattern="[a-zA-ZáéíóúÁÉÍÓÚ ]*"
             />
+          </div>
+          <div class="form-group" *ngIf="viewOnly">
+            <label for="verificationCode">Código de verificación</label>
+            <input
+              type="text"
+              class="form-control"
+              id="verificationCode"
+              [(ngModel)]="selectedData.VerificationCode"
+              name="verificationCode"
+              placeholder="Código de verificación"
+              [readonly]="viewOnly"
+            />
+          </div>
+          <div class="form-group">
+            <label for="yearPublication">Año de publicación</label>
+            <input
+              type="number"
+              class="form-control"
+              id="yearPublication"
+              [(ngModel)]="selectedData.YearPublication"
+              name="yearPublication"
+              placeholder="Año de publicación"
+              [readonly]="viewOnly"
+              required
+              min="1000"
+              max="9999"
+            />
+          </div>
+          <div class="form-group">
+            <label for="description">Descripción</label>
+            <textarea
+              class="form-control"
+              id="description"
+              [(ngModel)]="selectedData.Description"
+              name="description"
+              placeholder="Descripción"
+              [readonly]="viewOnly"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group" style="display: flex; flex-direction: column">
+            <label for="filePath">Ruta del archivo</label>
+            <input
+              (change)="onFileSelected($event)"
+              type="file"
+              class="form-control"
+              id="filePath"
+              [(ngModel)]="selectedData.FilePath"
+              name="filePath"
+              placeholder="Ruta del archivo"
+              *ngIf="!viewOnly"
+              [required]="!id"
+            />
+            <label *ngIf="!viewOnly" style="margin-bottom: 8px">{{
+              selectedData.FilePath
+            }}</label>
+            <a
+              *ngIf="viewOnly"
+              [attr.href]="selectedData.FilePath"
+              (click)="openPdf(selectedData.FilePath || '')"
+              >Descargar documento</a
+            >
+          </div>
+          <div class="form-group">
+            <label for="area">Área</label>
+            <select
+              class="form-control"
+              id="area"
+              [(ngModel)]="selectedData.AreaId"
+              name="area"
+              disabled
+              required
+            >
+              <option value="0" selected>Seleccionar</option>
+              <option *ngFor="let area of dataAreaAll" [value]="area?.Id">
+                {{ area?.Name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="type">Tipo de documento</label>
+            <select
+              class="form-control"
+              id="type"
+              [(ngModel)]="selectedData.TypeId"
+              name="type"
+              [disabled]="viewOnly"
+              required
+            >
+              <option value="0" selected>Seleccionar</option>
+              <option
+                *ngFor="let type of dataDocumentTypeAll"
+                [value]="type?.Id"
+              >
+                {{ type?.Name }}
+              </option>
+            </select>
           </div>
         </form>
       </div>
@@ -239,7 +344,7 @@
           type="button"
           class="btn btn-primary"
           (click)="saveData()"
-          [disabled]="dataForm.invalid"
+          [disabled]="!dataForm.valid"
         >
           {{ id ? "Editar" : "Guardar" }}
         </button>

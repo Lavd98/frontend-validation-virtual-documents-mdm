@@ -28,7 +28,6 @@ export class DocumentReportComponent implements OnInit, OnDestroy {
   }
 
   searchDocument(): void {
-    debugger;
     this.documentService.getDocumentByNumber(this.documentNumber).subscribe(
       (data) => {
         this.documentData = data || { id: '', fileName: '' };

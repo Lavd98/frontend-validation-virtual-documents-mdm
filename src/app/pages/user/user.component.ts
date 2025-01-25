@@ -127,7 +127,6 @@ export class UserComponent implements OnInit {
   openForm(data?: User, viewOnly: boolean = false): void {
     this.id = '';
     this.viewOnly = viewOnly;
-    debugger;
     if (data) {
       this.id = data.Id || '';
       this.selectedData = {

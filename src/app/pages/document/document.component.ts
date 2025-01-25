@@ -4,6 +4,10 @@ import { DocumentService } from '../services/document.service';
 import { LoginData } from '../../interfaces/login.interface';
 import { Area } from '../../interfaces/area.interface';
 import { AreaService } from '../services/area.service';
+import { DocumentTypeService } from '../services/document-type.service';
+import { DocumentType } from '../../interfaces/documet-type.interface';
+import { AuthService } from '../../auth/auth.service';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -15,6 +19,7 @@ declare var $: any;
 export class DocumentComponent implements OnInit {
   dataAll: Document[] = [];
   dataAreaAll: Area[] = [];
+  dataDocumentTypeAll: DocumentType[] = [];
   viewOnly: boolean = false;
   filteredData: Document[] = [];
   itemsPage: number = 10;
@@ -22,26 +27,65 @@ export class DocumentComponent implements OnInit {
   searchText: string = '';
   confirmAction: string = '';
   selectedData: Document = {};
+  selectedFile: File | null = null;
   id: string = '';
   filterActive: boolean = true;
   filterInactive: boolean = false;
-  areaId: string = '';
-  loginData: LoginData = JSON.parse(
-    localStorage.getItem('user') || '{ Token: "", User: {} }'
-  );
+  areaId: number = 0;
 
   @ViewChild('formModal') formModal!: ElementRef;
   @ViewChild('confirmModal') confirmModal!: ElementRef;
 
   constructor(
+    private documentTypeService: DocumentTypeService,
     private documentService: DocumentService,
-    private areaService: AreaService
+    private areaService: AreaService,
+    private router: Router
   ) {}
 
+  loginData: LoginData = (() => {
+    const user = localStorage.getItem('user');
+    if (!user) this.router.navigate(['/login']);
+    return user ? JSON.parse(user) : { Token: undefined, User: {} };
+  })();
+
   ngOnInit(): void {
-    this.areaId = this.loginData.User.Area?.Id || '';
+    // this.validateToken();
+    this.areaId = Number(this.loginData.User.Area?.Id) || 0;
     this.loadData();
     this.areaData();
+    this.documentTypeData();
+  }
+
+  // validateToken(): void {
+  //   this.authService.isTokenValid().subscribe({
+  //     next: ({ data }) => {
+  //       if (!data.valid && data.expired) {
+  //         this.authService.logout();
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Error validating token:', err);
+  //       return false;
+  //     },
+  //   });
+  // }
+
+  documentTypeData(): void {
+    this.documentTypeService.getActive().subscribe({
+      next: ({ data }) => {
+        this.dataDocumentTypeAll = data || [];
+      },
+      error: (err) => {
+        console.error('Error loading data:', err);
+        this.toastMessage(
+          'Error',
+          '',
+          'No se pudo cargar los datos',
+          'bg-danger'
+        );
+      },
+    });
   }
 
   areaData(): void {
@@ -140,11 +184,25 @@ export class DocumentComponent implements OnInit {
       this.id = data.Id || '';
       this.selectedData = {
         Name: data.Name || '',
+        VerificationCode: data.VerificationCode || '',
+        AreaId: data.AreaId || 0,
+        TypeId: data.TypeId || 0,
+        YearPublication: data.YearPublication || 0,
+        Description: data.Description || '',
+        FilePath: data.FilePath || '',
+        UserId: data.UserId || 0,
       };
     } else {
       this.selectedData = {
         Id: '',
         Name: '',
+        VerificationCode: '',
+        AreaId: this.areaId,
+        TypeId: 0,
+        YearPublication: 0,
+        Description: '',
+        FilePath: '',
+        UserId: Number(this.loginData.User.Id) || 0,
       };
     }
 
@@ -160,8 +218,21 @@ export class DocumentComponent implements OnInit {
   }
 
   saveData(): void {
+    const formData = new FormData();
+    formData.append('Name', this.selectedData.Name || '');
+    formData.append('AreaId', String(this.selectedData.AreaId || 0));
+    formData.append('TypeId', String(this.selectedData.TypeId || 0));
+    formData.append(
+      'YearPublication',
+      String(this.selectedData.YearPublication || 0)
+    );
+    formData.append('Description', this.selectedData.Description || '');
+    formData.append('UserId', String(this.selectedData.UserId || 0));
+    if (this.selectedFile) {
+      formData.append('file', this.selectedFile);
+    }
     if (this.id && this.selectedData) {
-      this.documentService.put(this.id, this.selectedData).subscribe({
+      this.documentService.put(this.id, formData).subscribe({
         next: () => {
           this.loadData();
           this.closeModal();
@@ -183,11 +254,7 @@ export class DocumentComponent implements OnInit {
         },
       });
     } else {
-      const body: Document = {
-        Name: this.selectedData.Name,
-      };
-
-      this.documentService.post(body).subscribe({
+      this.documentService.post(formData).subscribe({
         next: () => {
           this.loadData();
           this.closeModal();
@@ -209,6 +276,10 @@ export class DocumentComponent implements OnInit {
         },
       });
     }
+  }
+
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
   }
 
   toastMessage(
@@ -301,5 +372,10 @@ export class DocumentComponent implements OnInit {
       this.filterActive = false;
     }
     this.loadDataInactive();
+  }
+
+  openPdf(url: string = ''): void {
+    const urlPath = `file://${url}`;
+    window.open(urlPath, '_blank');
   }
 }
