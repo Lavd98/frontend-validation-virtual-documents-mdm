@@ -35,16 +35,19 @@ const routes: Routes = [
       {
         path: 'document-type',
         component: DocumentTypeComponent,
+        canActivate: [ServiceGuard],
         data: { titulo: 'Lista de tipo de documento' },
       },
       {
         path: 'area',
         component: AreaComponent,
+        canActivate: [ServiceGuard],
         data: { titulo: 'Lista de areas' },
       },
       {
         path: 'users',
         component: UserComponent,
+        canActivate: [ServiceGuard],
         data: { titulo: 'Lista de usuarios' },
       },
     ],
