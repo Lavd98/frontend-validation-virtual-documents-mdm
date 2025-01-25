@@ -2,7 +2,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { LoginResponse } from '../interfaces/login.interface';
-import * as jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -19,25 +18,35 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
-  isTokenValid(): boolean {
-    const { token } = JSON.parse(localStorage.getItem('user') || '{}');
-    if (!token) {
-      return false;
+  newToken(token: string): Observable<any> {
+    const body = { Token: token };
+    return this.http
+      .post<LoginResponse>(`${this.URL}/api/auth/new-token`, body)
+      .pipe(catchError(this.handleError));
+  }
+
+  isTokenValid(): Observable<any> {
+    const { Token, User } = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!Token || !User) {
+      return new Observable((observer) => {
+        observer.next({
+          code: 201,
+          success: true,
+          message: 'Resource created successfully',
+          data: {
+            valid: false,
+            expired: true,
+          },
+        });
+        observer.complete();
+      });
     }
 
-    try {
-      // const decodedToken: any = jwt_decode(token);
-      // const expirationDate = new Date(0);
-      // expirationDate.setUTCSeconds(decodedToken.exp);
+    const body = { Token };
 
-      // if (expirationDate < new Date()) {
-      //   return false; // Token ha expirado
-      // }
-
-      return true; // Token es válido
-    } catch (error) {
-      return false; // Error al decodificar el token
-    }
+    return this.http
+      .post<any>(`${this.URL}/api/auth/validate-token`, body)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
@@ -45,7 +54,7 @@ export class AuthService {
       console.error('An error occurred:', error.error.message);
     } else {
       console.error(
-        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+        `Backend returned code ${error.status}, ` + `body was: ${error.message}`
       );
     }
     return throwError(
