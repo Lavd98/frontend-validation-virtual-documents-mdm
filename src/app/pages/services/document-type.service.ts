@@ -16,7 +16,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class DocumentTypeService {
-  private readonly URL = environment.apiUrl;;
+  private readonly URL = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {

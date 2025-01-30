@@ -10,7 +10,6 @@ import { Area, AreaListResponse } from '../../interfaces/area.interface';
 import { environment } from '../../../environments/environment';
 
 import { MatDialog } from '@angular/material/dialog';
-import { TokenExpiredDialogComponent } from '../token-expired-dialog/token-expired-dialog.component';
 import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
 @Injectable({
@@ -18,12 +17,7 @@ import { Router } from '@angular/router';
 })
 export class AreaService {
   private readonly URL = environment.apiUrl;
-  constructor(
-    private http: HttpClient,
-    private dialog: MatDialog,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders().set(
@@ -39,7 +33,7 @@ export class AreaService {
 
   getActive(): Observable<AreaListResponse> {
     return this.http
-      .get<AreaListResponse>(`${this.URL}/areas`, {
+      .get<AreaListResponse>(`${this.URL}/api/areas`, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -47,7 +41,7 @@ export class AreaService {
 
   getInactive(): Observable<AreaListResponse> {
     return this.http
-      .get<AreaListResponse>(`${this.URL}/areas/inactive`, {
+      .get<AreaListResponse>(`${this.URL}/api/areas/inactive`, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -55,7 +49,7 @@ export class AreaService {
 
   post(body: Area): Observable<AreaListResponse> {
     return this.http
-      .post<AreaListResponse>(`${this.URL}/areas`, body, {
+      .post<AreaListResponse>(`${this.URL}/api/areas`, body, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -63,7 +57,7 @@ export class AreaService {
 
   put(id: string, body: Area): Observable<AreaListResponse> {
     return this.http
-      .put<AreaListResponse>(`${this.URL}/areas/${id}`, body, {
+      .put<AreaListResponse>(`${this.URL}/api/areas/${id}`, body, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -71,7 +65,7 @@ export class AreaService {
 
   inactivateUser(id: string): Observable<AreaListResponse> {
     return this.http
-      .delete<AreaListResponse>(`${this.URL}/areas/${id}`, {
+      .delete<AreaListResponse>(`${this.URL}/api/areas/${id}`, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -80,7 +74,7 @@ export class AreaService {
   activateUser(id: string): Observable<AreaListResponse> {
     return this.http
       .put<AreaListResponse>(
-        `${this.URL}/areas/reactivate/${id}`,
+        `${this.URL}/api/areas/reactivate/${id}`,
         {},
         {
           headers: this.getHeaders(),
@@ -90,32 +84,9 @@ export class AreaService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    debugger;
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
     } else {
-      // if (error.status === 401 && error.statusText === 'Unauthorized') {
-      //   const dialogRef = this.dialog.open(TokenExpiredDialogComponent, {
-      //     disableClose: true,
-      //   });
-
-      //   dialogRef.afterClosed().subscribe((result: any) => {
-      //     if (result === 'continue') {
-      //       try {
-      //         debugger;
-      //         this.authService
-      //           .newToken(this.loginData.Token)
-      //           .subscribe(({ data }) => {
-      //             localStorage.setItem('user', JSON.stringify(data));
-      //           });
-      //       } catch (error) {
-      //         this.router.navigate(['/login']);
-      //       }
-      //     } else {
-      //       this.router.navigate(['/login']);
-      //     }
-      //   });
-      // }
       console.error(
         `Backend returned code ${error.status}, ` + `body was: ${error.message}`
       );
