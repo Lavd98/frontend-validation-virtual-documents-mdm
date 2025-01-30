@@ -7,24 +7,37 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { LoginData } from '../../interfaces/login.interface';
 import { Area, AreaListResponse } from '../../interfaces/area.interface';
-
+import { MatDialog } from '@angular/material/dialog';
+import { TokenExpiredDialogComponent } from '../token-expired-dialog/token-expired-dialog.component';
+import { AuthService } from '../../auth/auth.service';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
 export class AreaService {
-  private readonly URL = 'http://localhost:3000';
-  constructor(private http: HttpClient) {}
+  private readonly URL = 'http://localhost:3000/api';
+  constructor(
+    private http: HttpClient,
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   private getHeaders(): HttpHeaders {
-    const loginData: LoginData = JSON.parse(
-      localStorage.getItem('user') || '{}'
+    return new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.loginData.Token}`
     );
-    return new HttpHeaders().set('Authorization', `Bearer ${loginData.Token}`);
   }
+
+  loginData: LoginData = (() => {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : { Token: undefined, User: {} };
+  })();
 
   getActive(): Observable<AreaListResponse> {
     return this.http
-      .get<AreaListResponse>(`${this.URL}/api/areas`, {
+      .get<AreaListResponse>(`${this.URL}/areas`, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -32,7 +45,7 @@ export class AreaService {
 
   getInactive(): Observable<AreaListResponse> {
     return this.http
-      .get<AreaListResponse>(`${this.URL}/api/areas/inactive`, {
+      .get<AreaListResponse>(`${this.URL}/areas/inactive`, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -40,7 +53,7 @@ export class AreaService {
 
   post(body: Area): Observable<AreaListResponse> {
     return this.http
-      .post<AreaListResponse>(`${this.URL}/api/areas2`, body, {
+      .post<AreaListResponse>(`${this.URL}/areas`, body, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -48,7 +61,7 @@ export class AreaService {
 
   put(id: string, body: Area): Observable<AreaListResponse> {
     return this.http
-      .put<AreaListResponse>(`${this.URL}/api/areas/${id}`, body, {
+      .put<AreaListResponse>(`${this.URL}/areas/${id}`, body, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -56,7 +69,7 @@ export class AreaService {
 
   inactivateUser(id: string): Observable<AreaListResponse> {
     return this.http
-      .delete<AreaListResponse>(`${this.URL}/api/areas/${id}`, {
+      .delete<AreaListResponse>(`${this.URL}/areas/${id}`, {
         headers: this.getHeaders(),
       })
       .pipe(catchError(this.handleError));
@@ -64,16 +77,43 @@ export class AreaService {
 
   activateUser(id: string): Observable<AreaListResponse> {
     return this.http
-      .put<AreaListResponse>(`${this.URL}/api/areas/reactivate/${id}`, {
-        headers: this.getHeaders(),
-      })
+      .put<AreaListResponse>(
+        `${this.URL}/areas/reactivate/${id}`,
+        {},
+        {
+          headers: this.getHeaders(),
+        }
+      )
       .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
+    debugger;
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
     } else {
+      // if (error.status === 401 && error.statusText === 'Unauthorized') {
+      //   const dialogRef = this.dialog.open(TokenExpiredDialogComponent, {
+      //     disableClose: true,
+      //   });
+
+      //   dialogRef.afterClosed().subscribe((result: any) => {
+      //     if (result === 'continue') {
+      //       try {
+      //         debugger;
+      //         this.authService
+      //           .newToken(this.loginData.Token)
+      //           .subscribe(({ data }) => {
+      //             localStorage.setItem('user', JSON.stringify(data));
+      //           });
+      //       } catch (error) {
+      //         this.router.navigate(['/login']);
+      //       }
+      //     } else {
+      //       this.router.navigate(['/login']);
+      //     }
+      //   });
+      // }
       console.error(
         `Backend returned code ${error.status}, ` + `body was: ${error.message}`
       );

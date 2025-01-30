@@ -203,6 +203,8 @@
               [readonly]="viewOnly"
               required
               title="Solo letras"
+              pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"
+              oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             />
           </div>
         </form>

@@ -64,9 +64,13 @@ export class UserService {
 
   activateUser(id: string): Observable<UserListResponse> {
     return this.http
-      .put<UserListResponse>(`${this.URL}/api/users/reactivate/${id}`, {
-        headers: this.getHeaders(),
-      })
+      .put<UserListResponse>(
+        `${this.URL}/api/users/reactivate/${id}`,
+        {},
+        {
+          headers: this.getHeaders(),
+        }
+      )
       .pipe(catchError(this.handleError));
   }
 

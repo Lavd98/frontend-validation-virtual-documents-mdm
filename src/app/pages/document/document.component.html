@@ -233,7 +233,8 @@
               [readonly]="viewOnly"
               required
               title="Solo letras y acentos"
-              pattern="[a-zA-ZáéíóúÁÉÍÓÚ ]*"
+              pattern="^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]+$"
+              oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             />
           </div>
           <div class="form-group" *ngIf="viewOnly">
@@ -246,6 +247,8 @@
               name="verificationCode"
               placeholder="Código de verificación"
               [readonly]="viewOnly"
+              pattern="^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]+$"
+              oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             />
           </div>
           <div class="form-group">
@@ -273,6 +276,8 @@
               placeholder="Descripción"
               [readonly]="viewOnly"
               required
+              pattern="^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]+$"
+              oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             ></textarea>
           </div>
           <div class="form-group" style="display: flex; flex-direction: column">
@@ -292,8 +297,8 @@
               selectedData.FilePath
             }}</label>
             <a
+              style="color: cornflowerblue"
               *ngIf="viewOnly"
-              [attr.href]="selectedData.FilePath"
               (click)="openPdf(selectedData.FilePath || '')"
               >Descargar documento</a
             >

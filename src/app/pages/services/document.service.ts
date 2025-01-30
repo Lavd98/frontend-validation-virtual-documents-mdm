@@ -89,20 +89,11 @@ export class DocumentService {
     );
   }
 
-  private mockDocuments = [
-    {
-      id: '12345',
-      documentNumber: '001',
-      fileName: `COMPROBANTE.pdf`,
-    },
-  ];
-
-  getDocumentByNumber(
-    number: string
-  ): Observable<{ id: string; fileName: string } | undefined> {
-    const document = this.mockDocuments.find(
-      (doc) => doc.documentNumber === number
-    );
-    return of(document);
+  getDocumentByNumber(id: string): Observable<any> {
+    return this.http
+      .get<DocumentListResponse>(`${this.URL}/api/documents/basic/${id}`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 }

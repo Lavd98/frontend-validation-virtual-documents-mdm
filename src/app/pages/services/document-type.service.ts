@@ -79,6 +79,7 @@ export class DocumentTypeService {
     return this.http
       .put<DocumentTypeListResponse>(
         `${this.URL}/api/document-types/reactivate/${id}`,
+        {},
         {
           headers: this.getHeaders(),
         }
