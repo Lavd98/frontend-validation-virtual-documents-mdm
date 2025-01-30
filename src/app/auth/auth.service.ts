@@ -2,12 +2,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { LoginResponse } from '../interfaces/login.interface';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private URL = 'http://localhost:3000';
+  private readonly URL = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

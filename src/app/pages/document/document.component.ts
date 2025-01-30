@@ -375,7 +375,7 @@ export class DocumentComponent implements OnInit {
   }
 
   openPdf(url: string = ''): void {
-    const urlPath = `file://${url}`;
+    const urlPath = `http://localhost:3002/documentos/${url}`;
     window.open(urlPath, '_blank');
   }
 }

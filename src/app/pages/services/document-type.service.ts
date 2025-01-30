@@ -10,12 +10,13 @@ import {
   DocumentType,
   DocumentTypeListResponse,
 } from '../../interfaces/documet-type.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentTypeService {
-  private readonly URL = 'http://localhost:3000';
+  private readonly URL = environment.apiUrl;;
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {

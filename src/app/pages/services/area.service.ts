@@ -7,12 +7,13 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { LoginData } from '../../interfaces/login.interface';
 import { Area, AreaListResponse } from '../../interfaces/area.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AreaService {
-  private readonly URL = 'http://localhost:3000';
+  private readonly URL = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {

@@ -10,12 +10,13 @@ import {
   Document,
   DocumentListResponse,
 } from '../../interfaces/documet.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentService {
-  private readonly URL = 'http://localhost:3000';
+  private readonly URL = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {

@@ -5,6 +5,11 @@
 .login-card-body,
 .login-box {
   background: white;
+
+  img {
+    width: 70%;
+    height: auto;
+  }
 }
 
 .login-box,
