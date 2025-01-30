@@ -28,10 +28,14 @@ export class DocumentReportComponent implements OnInit, OnDestroy {
   }
 
   searchDocument(): void {
-    this.documentService.getDocumentByNumber(this.documentNumber).subscribe(
-      (data) => {
-        this.documentData = data || { id: '', fileName: '' };
-        if (!this.documentData) {
+    debugger;
+    this.documentService.getDocumentByNumber(this.documentNumber).subscribe({
+      next: ({ data }) => {
+        this.documentData = {
+          id: data.Id,
+          fileName: 'http://localhost:3002/documents/' + data.FilePath,
+        };
+        if (!this.documentData.id) {
           this.showToast(
             'Error',
             '',
@@ -40,7 +44,7 @@ export class DocumentReportComponent implements OnInit, OnDestroy {
           );
         }
       },
-      () => {
+      error: () => {
         this.documentData = { id: '', fileName: '' };
         this.showToast(
           'Error',
@@ -48,8 +52,8 @@ export class DocumentReportComponent implements OnInit, OnDestroy {
           'No se pudo cargar los perfiles',
           'bg-danger'
         );
-      }
-    );
+      },
+    });
   }
 
   showToast(

@@ -208,9 +208,9 @@
               placeholder="Nombre de usuario"
               [readonly]="viewOnly"
               required
-              pattern="^[a-zA-Z]+$"
               title="Solo letras"
-              oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '')"
+              pattern="^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]+$"
+              oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             />
           </div>
           <div class="form-group">
@@ -224,9 +224,9 @@
               placeholder="Nombre de usuario"
               [readonly]="viewOnly"
               required
-              pattern="^[a-zA-Z]+$"
               title="Solo letras"
-              oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '')"
+              pattern="^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]+$"
+              oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             />
           </div>
           <div class="form-group">
@@ -240,9 +240,9 @@
               placeholder="Apellido de usuario"
               [readonly]="viewOnly"
               required
-              pattern="^[a-zA-Z]+$"
               title="Solo letras"
-              oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '')"
+              pattern="^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]+$"
+              oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             />
           </div>
           <div class="form-group">

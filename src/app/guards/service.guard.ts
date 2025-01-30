@@ -33,7 +33,6 @@ export class ServiceGuard implements CanActivate {
           dialogRef.afterClosed().subscribe((result: any) => {
             if (result === 'continue') {
               try {
-                debugger;
                 this.authService
                   .newToken(this.loginData.Token)
                   .subscribe(({ data }) => {

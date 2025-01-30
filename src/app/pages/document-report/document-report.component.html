@@ -12,7 +12,7 @@
   </span>
 </div>
 <div class="content">
-  <div style="display: flex; margin: auto; flex: 1">
+  <div style="display: flex; flex: 1">
     <div class="search">
       <h3>VERIFICACIÓN DE DOCUMENTOS FIRMADOS DIGITALMENTE - SGD</h3>
       <hr aria-orientation="horizontal" role="separator" />
@@ -46,20 +46,21 @@
     <img
       src="assets/dist/svg/documento-pdf.svg"
       alt="pdf"
-      *ngIf="!documentData"
+      *ngIf="!documentData.id"
     />
     <pdf-viewer
-      *ngIf="documentData"
-      [src]="documentData?.fileName || ''"
+      *ngIf="documentData.id"
+      [src]="documentData.fileName"
       [render-text]="true"
       [original-size]="false"
       [class]="isWidthMobile ? 'pdf-viewer-mobile' : 'pdf-viewer'"
     ></pdf-viewer>
-    <div *ngIf="documentData" class="button-pdf">
+    <div *ngIf="documentData.id" class="button-pdf">
       <a
         download="COMPROBANTE.pdf"
         class="btn btn-outline btn-success"
-        [href]="documentData?.fileName || ''"
+        [attr.href]="documentData.fileName || ''"
+        target="_blank"
         >Descargar PDF</a
       >
     </div>
