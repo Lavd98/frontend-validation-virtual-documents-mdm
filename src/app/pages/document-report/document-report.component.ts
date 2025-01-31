@@ -48,7 +48,7 @@ export class DocumentReportComponent implements OnInit, OnDestroy {
         this.showToast(
           'Error',
           '',
-          'No se pudo cargar los perfiles',
+          'No se pudo cargar los datos del documento',
           'bg-danger'
         );
       },

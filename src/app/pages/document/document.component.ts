@@ -8,6 +8,7 @@ import { DocumentTypeService } from '../services/document-type.service';
 import { DocumentType } from '../../interfaces/documet-type.interface';
 import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 declare var $: any;
 
@@ -49,27 +50,16 @@ export class DocumentComponent implements OnInit {
     return user ? JSON.parse(user) : { Token: undefined, User: {} };
   })();
 
+  get isAdmin(): boolean {
+    return this.loginData.User?.Profile === 'Admin';
+  }
+
   ngOnInit(): void {
-    // this.validateToken();
     this.areaId = Number(this.loginData.User.Area?.Id) || 0;
     this.loadData();
     this.areaData();
     this.documentTypeData();
   }
-
-  // validateToken(): void {
-  //   this.authService.isTokenValid().subscribe({
-  //     next: ({ data }) => {
-  //       if (!data.valid && data.expired) {
-  //         this.authService.logout();
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('Error validating token:', err);
-  //       return false;
-  //     },
-  //   });
-  // }
 
   documentTypeData(): void {
     this.documentTypeService.getActive().subscribe({
@@ -375,7 +365,7 @@ export class DocumentComponent implements OnInit {
   }
 
   openPdf(url: string = ''): void {
-    const urlPath = `http://localhost:3002/documents/${url}`;
+    const urlPath = `${environment.apiFileUrl}/${url}`;
     window.open(urlPath, '_blank');
   }
 }

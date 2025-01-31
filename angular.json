@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "adminlte3conangular17": {
+    "validationVirtualDocumentsMdm": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/adminlte3conangular17",
+            "outputPath": "dist/validationVirtualDocumentsMdm",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -42,11 +42,12 @@
           },
           "configurations": {
             "production": {
+              "outputPath": "dist/validationVirtualDocumentsMdm",
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -74,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "adminlte3conangular17:build:production"
+              "buildTarget": "validationVirtualDocumentsMdm:build:production"
             },
             "development": {
-              "buildTarget": "adminlte3conangular17:build:development"
+              "buildTarget": "validationVirtualDocumentsMdm:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -85,7 +86,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "adminlte3conangular17:build"
+            "buildTarget": "validationVirtualDocumentsMdm:build"
           }
         },
         "test": {

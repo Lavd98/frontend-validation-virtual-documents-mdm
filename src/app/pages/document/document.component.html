@@ -120,7 +120,7 @@
                       <i class="fa fa-edit"></i>
                     </button>
                     <button
-                      *ngIf="data.IsActive"
+                      *ngIf="data.IsActive && isAdmin"
                       class="btn btn-xs btn-danger"
                       (click)="openConfirmModal('inactivate', data)"
                       title="Eliminar"
@@ -128,7 +128,7 @@
                       <i class="fa fa-trash"></i>
                     </button>
                     <button
-                      *ngIf="!data.IsActive"
+                      *ngIf="!data.IsActive && isAdmin"
                       class="btn btn-xs btn-success"
                       (click)="openConfirmModal('activate', data)"
                       title="Activar"

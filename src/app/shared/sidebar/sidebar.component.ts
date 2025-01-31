@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class SidebarComponent {
   name: string = '';
   lastName: string = '';
+  isAdmin: boolean = false;
 
   loginData: LoginData = (() => {
     const user = localStorage.getItem('user');
@@ -20,6 +21,7 @@ export class SidebarComponent {
   constructor(private router: Router) {
     this.name = this.loginData.User?.Name || '';
     this.lastName = this.loginData.User?.LastName || '';
+    this.isAdmin = this.loginData.User?.Profile === 'Admin';
   }
 
   logout() {

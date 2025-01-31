@@ -9,9 +9,6 @@ import { LoginData } from '../../interfaces/login.interface';
 import { Area, AreaListResponse } from '../../interfaces/area.interface';
 import { environment } from '../../../environments/environment';
 
-import { MatDialog } from '@angular/material/dialog';
-import { AuthService } from '../../auth/auth.service';
-import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })

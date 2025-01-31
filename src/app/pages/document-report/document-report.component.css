@@ -57,3 +57,27 @@
   width: 500px;
   height: 500px;
 }
+
+@media (max-width: 900px) {
+  .content {
+    flex-direction: column;
+  }
+  .header_titulo {
+    justify-content: center;
+  }
+  .logo {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    flex-direction: column;
+  }
+  .header_titulo {
+    justify-content: center;
+  }
+  .logo {
+    display: none !important;
+  }
+}
