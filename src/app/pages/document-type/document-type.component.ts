@@ -16,6 +16,7 @@ export class DocumentTypeComponent implements OnInit {
   itemsPage: number = 10;
   currentPage: number = 1;
   searchText: string = '';
+  isSaving: boolean = false;
   confirmAction: string = '';
   selectedData: DocumentType = {};
   id: string = '';

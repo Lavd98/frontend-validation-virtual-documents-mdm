@@ -21,6 +21,7 @@ export class AreaComponent implements OnInit {
   id: string = '';
   filterActive: boolean = true;
   filterInactive: boolean = false;
+  isSaving: boolean = false;
 
   @ViewChild('formModal') formModal!: ElementRef;
   @ViewChild('confirmModal') confirmModal!: ElementRef;
@@ -123,6 +124,7 @@ export class AreaComponent implements OnInit {
   }
 
   saveData(): void {
+    this.isSaving = true;
     if (this.id && this.selectedData) {
       this.areaService.put(this.id, this.selectedData).subscribe({
         next: () => {
@@ -143,6 +145,9 @@ export class AreaComponent implements OnInit {
             'bg-danger'
           );
           console.error('Error updating user:', err);
+        },
+        complete: () => {
+          this.isSaving = false;
         },
       });
     } else {
@@ -170,6 +175,9 @@ export class AreaComponent implements OnInit {
             'bg-danger'
           );
           console.error('Error creating user:', err);
+        },
+        complete: () => {
+          this.isSaving = false;
         },
       });
     }
@@ -206,6 +214,7 @@ export class AreaComponent implements OnInit {
   }
 
   confirmActivateData(): void {
+    this.isSaving = true;
     this.areaService.activateUser(this.id).subscribe({
       next: () => {
         this.loadDataInactive();
@@ -226,10 +235,14 @@ export class AreaComponent implements OnInit {
         );
         console.error('Error activating user:', err);
       },
+      complete: () => {
+        this.isSaving = false;
+      },
     });
   }
 
   confirmInactivateData(): void {
+    this.isSaving = true;
     this.areaService.inactivateUser(this.id).subscribe({
       next: () => {
         this.loadData();
@@ -249,6 +262,9 @@ export class AreaComponent implements OnInit {
           'bg-danger'
         );
         console.error('Error inactivating user:', err);
+      },
+      complete: () => {
+        this.isSaving = false;
       },
     });
   }

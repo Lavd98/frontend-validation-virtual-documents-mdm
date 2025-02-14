@@ -33,9 +33,11 @@ export class DocumentComponent implements OnInit {
   filterActive: boolean = true;
   filterInactive: boolean = false;
   areaId: number = 0;
+  isSaving: boolean = false;
 
   @ViewChild('formModal') formModal!: ElementRef;
   @ViewChild('confirmModal') confirmModal!: ElementRef;
+  @ViewChild('formFileModal') formFileModal!: ElementRef;
 
   constructor(
     private documentTypeService: DocumentTypeService,
@@ -49,6 +51,11 @@ export class DocumentComponent implements OnInit {
     if (!user) this.router.navigate(['/login']);
     return user ? JSON.parse(user) : { Token: undefined, User: {} };
   })();
+
+  isEvaluateShowOpenFormFile(filePath: string): boolean {
+    if (this.isAdmin) return true;
+    return !filePath;
+  }
 
   get isAdmin(): boolean {
     return this.loginData.User?.Profile === 'Admin';
@@ -167,6 +174,18 @@ export class DocumentComponent implements OnInit {
     return Math.ceil(this.filteredData.length / this.itemsPage);
   }
 
+  openFormFile(data: Document): void {
+    this.viewOnly = false;
+    this.id = data.Id || '';
+    this.selectedData = {
+      FilePath: data.FilePath || '',
+    };
+
+    const modalEl = this.formFileModal.nativeElement;
+    modalEl.style.display = 'block';
+    modalEl.classList.add('in');
+  }
+
   openForm(data?: Document, viewOnly: boolean = false): void {
     this.id = '';
     this.viewOnly = viewOnly;
@@ -207,7 +226,46 @@ export class DocumentComponent implements OnInit {
     modalEl.classList.remove('in');
   }
 
+  closeModalFile(): void {
+    const modalEl = this.formFileModal.nativeElement;
+    modalEl.style.display = 'none';
+    modalEl.classList.remove('in');
+  }
+
+  saveDataFile(): void {
+    this.isSaving = true;
+    const formData = new FormData();
+    if (this.selectedFile) {
+      formData.append('file', this.selectedFile);
+    }
+    this.documentService.putFile(this.id, formData).subscribe({
+      next: () => {
+        this.loadData();
+        this.closeModalFile();
+        this.toastMessage(
+          'registro actualizado',
+          '',
+          'El registro ha sido actualizado exitosamente',
+          'bg-success'
+        );
+      },
+      error: (err) => {
+        this.toastMessage(
+          'Error',
+          '',
+          'No se pudo actualizar el registro',
+          'bg-danger'
+        );
+        console.error('Error updating user:', err);
+      },
+      complete: () => {
+        this.isSaving = false;
+      },
+    });
+  }
+
   saveData(): void {
+    this.isSaving = true;
     const formData = new FormData();
     formData.append('Name', this.selectedData.Name || '');
     formData.append('AreaId', String(this.selectedData.AreaId || 0));
@@ -218,9 +276,10 @@ export class DocumentComponent implements OnInit {
     );
     formData.append('Description', this.selectedData.Description || '');
     formData.append('UserId', String(this.selectedData.UserId || 0));
-    if (this.selectedFile) {
-      formData.append('file', this.selectedFile);
-    }
+    // TODO: Add file to formData
+    // if (this.selectedFile) {
+    //   formData.append('file', this.selectedFile);
+    // }
     if (this.id && this.selectedData) {
       this.documentService.put(this.id, formData).subscribe({
         next: () => {
@@ -241,6 +300,9 @@ export class DocumentComponent implements OnInit {
             'bg-danger'
           );
           console.error('Error updating user:', err);
+        },
+        complete: () => {
+          this.isSaving = false;
         },
       });
     } else {
@@ -263,6 +325,9 @@ export class DocumentComponent implements OnInit {
             'bg-danger'
           );
           console.error('Error creating user:', err);
+        },
+        complete: () => {
+          this.isSaving = false;
         },
       });
     }
@@ -303,6 +368,7 @@ export class DocumentComponent implements OnInit {
   }
 
   confirmActivateData(): void {
+    this.isSaving = true;
     this.documentService.activateUser(this.id).subscribe({
       next: () => {
         this.loadDataInactive();
@@ -323,10 +389,14 @@ export class DocumentComponent implements OnInit {
         );
         console.error('Error activating user:', err);
       },
+      complete: () => {
+        this.isSaving = false;
+      },
     });
   }
 
   confirmInactivateData(): void {
+    this.isSaving = true;
     this.documentService.inactivateUser(this.id).subscribe({
       next: () => {
         this.loadData();
@@ -346,6 +416,9 @@ export class DocumentComponent implements OnInit {
           'bg-danger'
         );
         console.error('Error inactivating user:', err);
+      },
+      complete: () => {
+        this.isSaving = false;
       },
     });
   }

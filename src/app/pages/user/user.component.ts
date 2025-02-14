@@ -25,6 +25,7 @@ export class UserComponent implements OnInit {
   id: string = '';
   filterActive: boolean = true;
   filterInactive: boolean = false;
+  isSaving: boolean = false;
 
   @ViewChild('formModal') formModal!: ElementRef;
   @ViewChild('confirmModal') confirmModal!: ElementRef;
@@ -160,6 +161,7 @@ export class UserComponent implements OnInit {
   }
 
   saveData(): void {
+    this.isSaving = true;
     if (this.id && this.selectedData) {
       if (this.selectedData.Password === '') {
         delete this.selectedData.Password;
@@ -183,6 +185,9 @@ export class UserComponent implements OnInit {
             'bg-danger'
           );
           console.error('Error updating user:', err);
+        },
+        complete: () => {
+          this.isSaving = false;
         },
       });
     } else {
@@ -214,6 +219,9 @@ export class UserComponent implements OnInit {
             'bg-danger'
           );
           console.error('Error creating user:', err);
+        },
+        complete: () => {
+          this.isSaving = false;
         },
       });
     }
@@ -250,6 +258,7 @@ export class UserComponent implements OnInit {
   }
 
   confirmActivateData(): void {
+    this.isSaving = true;
     this.userService.activateUser(this.id).subscribe({
       next: () => {
         this.loadDataInactive();
@@ -270,10 +279,14 @@ export class UserComponent implements OnInit {
         );
         console.error('Error activating user:', err);
       },
+      complete: () => {
+        this.isSaving = false;
+      },
     });
   }
 
   confirmInactivateData(): void {
+    this.isSaving = true;
     this.userService.inactivateUser(this.id).subscribe({
       next: () => {
         this.loadData();
@@ -293,6 +306,9 @@ export class UserComponent implements OnInit {
           'bg-danger'
         );
         console.error('Error inactivating user:', err);
+      },
+      complete: () => {
+        this.isSaving = false;
       },
     });
   }

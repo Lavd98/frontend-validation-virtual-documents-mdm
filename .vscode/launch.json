@@ -17,6 +17,14 @@
       "preLaunchTask": "npm: test",
       "url": "http://localhost:9876/debug.html",
       "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Nest Framework",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "args": ["${workspaceFolder}/src/main.ts"],
+      "autoAttachChildProcesses": true
     }
   ]
 }

@@ -61,6 +61,18 @@ export class DocumentService {
       .pipe(catchError(this.handleError));
   }
 
+  putFile(id: string, body: any): Observable<DocumentListResponse> {
+    return this.http
+      .put<DocumentListResponse>(
+        `${this.URL}/api/documents/${id}/archivo`,
+        body,
+        {
+          headers: this.getHeaders(),
+        }
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   inactivateUser(id: string): Observable<DocumentListResponse> {
     return this.http
       .delete<DocumentListResponse>(`${this.URL}/api/documents/${id}`, {

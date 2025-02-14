@@ -26,7 +26,7 @@
                   </option>
                 </select>
               </div>
-              <div>
+              <div *ngIf="isAdmin">
                 <div class="form-check form-check-inline">
                   <input
                     class="form-check-input"
@@ -98,11 +98,23 @@
                   </td>
                   <td style="display: flex; gap: 8px">
                     <button
+                      [disabled]="!data.FilePath"
+                      tooltip="Descargar documento"
                       class="btn btn-xs btn-danger"
                       title="Ver detalle"
                       (click)="openPdf(data.FilePath)"
                     >
                       <i class="fa fa-file-pdf"></i>
+                    </button>
+                    <button
+                      *ngIf="
+                        this.isEvaluateShowOpenFormFile(data.FilePath || '')
+                      "
+                      class="btn btn-xs btn-success"
+                      title="Ver detalle"
+                      (click)="openFormFile(data)"
+                    >
+                      <i class="fa fa-file-upload"></i>
                     </button>
                     <button
                       class="btn btn-xs btn-info"
@@ -280,7 +292,7 @@
               oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             ></textarea>
           </div>
-          <div class="form-group" style="display: flex; flex-direction: column">
+          <!-- <div class="form-group" style="display: flex; flex-direction: column">
             <label for="filePath">Ruta del archivo</label>
             <input
               (change)="onFileSelected($event)"
@@ -302,7 +314,7 @@
               (click)="openPdf(selectedData.FilePath || '')"
               >Descargar documento</a
             >
-          </div>
+          </div> -->
           <div class="form-group">
             <label for="area">Área</label>
             <select
@@ -349,7 +361,53 @@
           type="button"
           class="btn btn-primary"
           (click)="saveData()"
-          [disabled]="!dataForm.valid"
+          [disabled]="!dataForm.valid || selectedData.TypeId === 0 || isSaving"
+        >
+          {{ id ? "Editar" : "Guardar" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div #formFileModal class="modal modal-backdrop fade" role="dialog">
+  <div class="modal-dialog content-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Subir archivo</h4>
+        <button type="button" class="close" (click)="closeModalFile()">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #dataFormFile="ngForm">
+          <div class="form-group" style="display: flex; flex-direction: column">
+            <label for="filePath">Ruta del archivo</label>
+            <input
+              (change)="onFileSelected($event)"
+              type="file"
+              class="form-control"
+              id="filePath"
+              [(ngModel)]="selectedData.FilePath"
+              name="filePath"
+              placeholder="Ruta del archivo"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="closeModalFile()"
+        >
+          Cerrar
+        </button>
+        <button
+          [hidden]="viewOnly"
+          type="button"
+          class="btn btn-primary"
+          (click)="saveDataFile()"
+          [disabled]="!dataFormFile.valid"
         >
           {{ id ? "Editar" : "Guardar" }}
         </button>
@@ -398,6 +456,7 @@
         </button>
         <button
           type="button"
+          [disabled]="isSaving"
           class="btn btn-primary"
           (click)="
             confirmAction === 'activate'
