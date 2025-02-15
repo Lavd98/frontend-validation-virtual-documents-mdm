@@ -124,7 +124,7 @@
                       <i class="fa fa-eye"></i>
                     </button>
                     <button
-                      *ngIf="data.IsActive"
+                      *ngIf="data.IsActive && isAdmin"
                       class="btn btn-xs btn-warning"
                       (click)="openForm(data)"
                       title="Editar"

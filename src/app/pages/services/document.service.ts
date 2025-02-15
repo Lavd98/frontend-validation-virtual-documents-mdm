@@ -83,9 +83,13 @@ export class DocumentService {
 
   activateUser(id: string): Observable<DocumentListResponse> {
     return this.http
-      .put<DocumentListResponse>(`${this.URL}/api/documents/reactivate/${id}`, {
-        headers: this.getHeaders(),
-      })
+      .put<DocumentListResponse>(
+        `${this.URL}/api/documents/reactivate/${id}`,
+        {},
+        {
+          headers: this.getHeaders(),
+        }
+      )
       .pipe(catchError(this.handleError));
   }
 

@@ -46,10 +46,10 @@
     <img
       src="assets/dist/svg/documento-pdf.svg"
       alt="pdf"
-      *ngIf="!documentData.id"
+      *ngIf="!documentData.id || !documentData.fileName"
     />
     <pdf-viewer
-      *ngIf="documentData.id"
+      *ngIf="documentData.id && documentData.fileName"
       [src]="documentData.fileName"
       [render-text]="true"
       [original-size]="false"

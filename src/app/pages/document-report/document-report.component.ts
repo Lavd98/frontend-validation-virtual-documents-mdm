@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DocumentService } from '../services/document.service';
+import { environment } from '../../../environments/environment';
 
 declare var $: any;
 
@@ -12,7 +13,10 @@ export class DocumentReportComponent implements OnInit, OnDestroy {
   windowWidth: number = 0;
   isWidthMobile: boolean = false;
   documentNumber: string = '';
-  documentData: { id: string; fileName: string } = { id: '', fileName: '' };
+  documentData: { id: string; fileName: string } = {
+    id: '',
+    fileName: '',
+  };
   error: boolean = false;
 
   constructor(private documentService: DocumentService) {
@@ -30,11 +34,14 @@ export class DocumentReportComponent implements OnInit, OnDestroy {
   searchDocument(): void {
     this.documentService.getDocumentByNumber(this.documentNumber).subscribe({
       next: ({ data }) => {
+        debugger;
         this.documentData = {
           id: data.Id,
-          fileName: 'http://localhost:3002/documents/' + data.FilePath,
+          fileName: data.FilePath
+            ? `${environment.apiFileUrl}/${data.FilePath}`
+            : '',
         };
-        if (!this.documentData.id) {
+        if (!this.documentData.id || this.documentData.fileName === '') {
           this.showToast(
             'Error',
             '',

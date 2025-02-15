@@ -245,7 +245,32 @@
               oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             />
           </div>
-          <div class="form-group">
+          <div class="form-group" *ngIf="id">
+            <label>¿Quieres cambiar la contraseña?</label>
+            <br />
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="changePasswordYes"
+                name="changePassword"
+                (click)="toggleChangePassword(true)"
+              />
+              <label class="form-check-label" for="changePasswordYes">Sí</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="changePasswordNo"
+                name="changePassword"
+                (click)="toggleChangePassword(false)"
+                checked
+              />
+              <label class="form-check-label" for="changePasswordNo">No</label>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="changePassword || !id">
             <label for="password">Password</label>
             <div class="input-group">
               <input

@@ -368,6 +368,7 @@ export class DocumentComponent implements OnInit {
   }
 
   confirmActivateData(): void {
+    debugger;
     this.isSaving = true;
     this.documentService.activateUser(this.id).subscribe({
       next: () => {
@@ -396,6 +397,7 @@ export class DocumentComponent implements OnInit {
   }
 
   confirmInactivateData(): void {
+    debugger;
     this.isSaving = true;
     this.documentService.inactivateUser(this.id).subscribe({
       next: () => {

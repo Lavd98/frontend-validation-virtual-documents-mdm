@@ -26,6 +26,7 @@ export class UserComponent implements OnInit {
   filterActive: boolean = true;
   filterInactive: boolean = false;
   isSaving: boolean = false;
+  changePassword: boolean = false;
 
   @ViewChild('formModal') formModal!: ElementRef;
   @ViewChild('confirmModal') confirmModal!: ElementRef;
@@ -325,5 +326,12 @@ export class UserComponent implements OnInit {
       this.filterActive = false;
     }
     this.loadDataInactive();
+  }
+
+  toggleChangePassword(forceChange: boolean): void {
+    this.changePassword = forceChange;
+    if (forceChange) {
+      this.selectedData.Password = '';
+    }
   }
 }
