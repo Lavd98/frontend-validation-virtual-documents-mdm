@@ -122,6 +122,7 @@ export class DocumentTypeComponent implements OnInit {
   }
 
   saveData(): void {
+    this.isSaving = true;
     if (this.id && this.selectedData) {
       this.documentTypeService.put(this.id, this.selectedData).subscribe({
         next: () => {
@@ -142,6 +143,9 @@ export class DocumentTypeComponent implements OnInit {
             'bg-danger'
           );
           console.error('Error updating user:', err);
+        },
+        complete: () => {
+          this.isSaving = false;
         },
       });
     } else {
@@ -168,6 +172,9 @@ export class DocumentTypeComponent implements OnInit {
             'bg-danger'
           );
           console.error('Error creating user:', err);
+        },
+        complete: () => {
+          this.isSaving = false;
         },
       });
     }
@@ -207,6 +214,7 @@ export class DocumentTypeComponent implements OnInit {
   }
 
   confirmActivateData(): void {
+    this.isSaving = true;
     this.documentTypeService.activateUser(this.id).subscribe({
       next: () => {
         this.loadDataInactive();
@@ -227,10 +235,14 @@ export class DocumentTypeComponent implements OnInit {
         );
         console.error('Error activating user:', err);
       },
+      complete: () => {
+        this.isSaving = false;
+      },
     });
   }
 
   confirmInactivateData(): void {
+    this.isSaving = true;
     this.documentTypeService.inactivateUser(this.id).subscribe({
       next: () => {
         this.loadData();
@@ -250,6 +262,9 @@ export class DocumentTypeComponent implements OnInit {
           'bg-danger'
         );
         console.error('Error inactivating user:', err);
+      },
+      complete: () => {
+        this.isSaving = false;
       },
     });
   }
