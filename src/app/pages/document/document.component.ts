@@ -440,7 +440,7 @@ export class DocumentComponent implements OnInit {
   }
 
   openPdf(url: string = ''): void {
-    const urlPath = `${environment.apiFileUrl}/${url}`;
+    const urlPath = `${environment.apiUrl}/files/${url}`;
     window.open(urlPath, '_blank');
   }
 }

@@ -34,11 +34,10 @@ export class DocumentReportComponent implements OnInit, OnDestroy {
   searchDocument(): void {
     this.documentService.getDocumentByNumber(this.documentNumber).subscribe({
       next: ({ data }) => {
-        debugger;
         this.documentData = {
           id: data.Id,
           fileName: data.FilePath
-            ? `${environment.apiFileUrl}/${data.FilePath}`
+            ? `${environment.apiUrl}/files/${data.FilePath}`
             : '',
         };
         if (!this.documentData.id || this.documentData.fileName === '') {
