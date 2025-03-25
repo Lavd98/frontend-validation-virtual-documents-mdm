@@ -40,6 +40,7 @@ export class DocumentReportComponent implements OnInit, OnDestroy {
             ? `${environment.apiUrl}/files/${data.FilePath}`
             : '',
         };
+        debugger;
         if (!this.documentData.id || this.documentData.fileName === '') {
           this.showToast(
             'Error',

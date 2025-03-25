@@ -244,8 +244,7 @@
               placeholder="Nombre del tipo de documento"
               [readonly]="viewOnly"
               required
-              title="Solo letras y acentos"
-              pattern="^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]+$"
+              title="Solo letras"
               oninput="this.value = this.value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚñÑ]/g, '').toUpperCase()"
             />
           </div>

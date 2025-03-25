@@ -50,6 +50,8 @@
       alt="pdf"
       *ngIf="!documentData.id || !documentData.fileName"
     />
+    <p>{{ documentData.fileName }}</p>
+    <p>{{ documentData.id }}</p>
     <pdf-viewer
       *ngIf="documentData.id && documentData.fileName"
       [src]="documentData.fileName"
